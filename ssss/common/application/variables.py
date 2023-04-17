@@ -6,7 +6,9 @@ def application_name() -> str:
 
 
 def application_description() -> str:
-    return importlib.metadata.metadata(application_name())["description"]
+    long_description = importlib.metadata.metadata(application_name())["description"]
+    short_description = long_description.split(".")[1]
+    return application_name() + " - " + "".join([c for c in short_description if c.isalnum() or c.isspace()])
 
 
 def application_version() -> str:
