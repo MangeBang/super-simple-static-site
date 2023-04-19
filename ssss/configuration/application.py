@@ -46,7 +46,7 @@ class Application(Arguments):
         self.parse.add_argument(
             "--init",
             action="store_true",
-            help="Initialize configuration file and glob_ext structure",
+            help="Initialize configuration file and site structure",
             default=False
         )
         args = self.parse.parse_args()
@@ -67,10 +67,10 @@ class Application(Arguments):
             yaml_data = yaml.safe_load(file)
 
         if yaml_data is not None:
-            site_data = self.data.get("glob_ext", {}) | yaml_data.get("glob_ext", {})
+            site_data = self.data.get("site", {}) | yaml_data.get("site", {})
             site_filters = self.data.get("filters", {}) | yaml_data.get("filters", {})
             self.data = self.data | yaml_data
-            self.data["glob_ext"] = site_data
+            self.data["site"] = site_data
             self.data["filters"] = site_filters
 
             self.set_config()
@@ -92,7 +92,7 @@ class Application(Arguments):
         self.config["encoding"] = str(self.data.get("encoding", application_default_encoding()))
         self.config["followlinks"] = str(self.data.get("followlinks", application_default_followlinks()))
         self.config["filters"] = dict(self.data.get("filters", application_default_filters()))
-        self.config["env_globals"] = dict(self.data.get("glob_ext", application_default_site()))
+        self.config["env_globals"] = dict(self.data.get("site", application_default_site()))
 
     def init_config(self):
 

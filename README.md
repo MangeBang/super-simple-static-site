@@ -28,5 +28,5 @@ which can be accessed in both content and template files.
 ```yaml
 site:
   title: Super Simple Static Site
-  description: A static glob_ext generator that uses Jinja and Markdown for templates and content, generating static HTML files.
+  description: A static site generator that uses Jinja and Markdown for templates and content, generating static HTML files.
 ```

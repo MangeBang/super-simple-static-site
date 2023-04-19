@@ -27,7 +27,7 @@ def test_ssss_no_args_after_init():
     assert "Baking /home/magnus/Repos/Python/staticjinja/ssss/site/source/index.md" in output
 
     unlink('test.yml')
-    make_empty('glob_ext', True)
+    make_empty('site', True)
 
 
 def test_ssss_no_args_after_init_with_empty_config():
