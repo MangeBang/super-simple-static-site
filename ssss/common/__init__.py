@@ -1,3 +1,3 @@
 from .application import variables
 from .fs import directory
-from .md import info, render
+from .md import context, rule

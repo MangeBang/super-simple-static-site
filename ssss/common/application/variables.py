@@ -1,4 +1,5 @@
 import importlib.metadata
+import os
 
 
 def application_name() -> str:
@@ -16,7 +17,7 @@ def application_version() -> str:
 
 
 def application_default_template_path() -> str:
-    return "_templates/"
+    return "_templates"
 
 
 def application_default_template_name() -> str:
@@ -36,15 +37,19 @@ def application_default_encoding() -> str:
 
 
 def application_default_data() -> str:
-    return r".*\.md"
+    return "*.md"
+
+
+def application_default_rule() -> str:
+    return "*" + application_default_template_extension()
 
 
 def application_default_output() -> str:
-    return "site/build"
+    return "site" + os.sep + "build"
 
 
 def application_default_source() -> str:
-    return "site/source"
+    return "site" + os.sep + "source"
 
 
 def application_default_followlinks() -> bool:
@@ -66,13 +71,12 @@ def application_default_site() -> dict:
 
 
 def application_default_template_file() -> str:
-    return application_default_template_path() \
-        + application_default_template_name() \
+    return application_default_template_name() \
         + application_default_template_extension()
 
 
 def application_default_base_html() -> str:
-    return application_default_template_path() + "base.html"
+    return "base.html"
 
 
 def application_default_config_data() -> dict:

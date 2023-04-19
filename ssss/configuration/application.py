@@ -6,11 +6,12 @@ import yaml
 from ssss.common.application import application_default_config_data
 from ssss.common.application.variables import application_default_template_path, application_default_template_file, \
     application_default_base_html, application_default_source, application_default_output, application_default_data, \
-    application_default_encoding, application_default_followlinks, application_default_filters, application_default_site
+    application_default_encoding, application_default_followlinks, application_default_filters, \
+    application_default_site, application_default_rule
 from ssss.common.fs import find_config
 from ssss.common.fs.directory import get_full_path, create_directory_if_not_exists, have_write_permission
 from ssss.common.fs.file import touch_if_not_exists
-from ssss.common.md import variables, render
+from ssss.common.md import variables, rule
 from ssss.configuration.arguments import Arguments
 from ssss.configuration.default import config_file_path
 
@@ -45,7 +46,7 @@ class Application(Arguments):
         self.parse.add_argument(
             "--init",
             action="store_true",
-            help="Initialize configuration file and site structure",
+            help="Initialize configuration file and glob_ext structure",
             default=False
         )
         args = self.parse.parse_args()
@@ -66,14 +67,15 @@ class Application(Arguments):
             yaml_data = yaml.safe_load(file)
 
         if yaml_data is not None:
-            site_data = self.data.get("site", {}) | yaml_data.get("site", {})
+            site_data = self.data.get("glob_ext", {}) | yaml_data.get("glob_ext", {})
             site_filters = self.data.get("filters", {}) | yaml_data.get("filters", {})
             self.data = self.data | yaml_data
-            self.data["site"] = site_data
+            self.data["glob_ext"] = site_data
             self.data["filters"] = site_filters
 
             self.set_config()
-            self.create_structure()
+            if self.__init_config:
+                self.create_structure()
 
         else:
             raise NotImplementedError
@@ -82,12 +84,14 @@ class Application(Arguments):
         self.data = {k: v for k, v in self.data.items() if v}
         self.config["searchpath"] = get_full_path(self.data.get("source", application_default_source()))
         self.config["outpath"] = get_full_path(self.data.get("output", application_default_output()))
+        self.config["templates"] = get_full_path(
+            self.data.get("templates", os.path.join(application_default_source(), application_default_template_path())))
         self.config["contexts"] = [(self.data.get("data", application_default_data()), variables)]
-        self.config["rules"] = [(self.data.get("data", application_default_data()), render.run)]
+        self.config["rules"] = [(self.data.get("data", application_default_rule()), rule.execute)]
         self.config["encoding"] = str(self.data.get("encoding", application_default_encoding()))
         self.config["followlinks"] = str(self.data.get("followlinks", application_default_followlinks()))
         self.config["filters"] = dict(self.data.get("filters", application_default_filters()))
-        self.config["env_globals"] = dict(self.data.get("site", application_default_site()))
+        self.config["env_globals"] = dict(self.data.get("glob_ext", application_default_site()))
 
     def init_config(self):
 
@@ -121,12 +125,14 @@ class Application(Arguments):
 
         touch_if_not_exists(
             os.path.join(self.config["searchpath"],
+                         application_default_template_path(),
                          application_default_base_html()
                          )
         )
         touch_if_not_exists(
             os.path.join(
                 self.config["searchpath"],
+                application_default_template_path(),
                 application_default_template_file()
             )
         )
