@@ -74,6 +74,7 @@ class Application(Arguments):
             self.data["filters"] = site_filters
 
             self.set_config()
+
             if self.__init_config:
                 self.create_structure()
 
@@ -113,34 +114,33 @@ class Application(Arguments):
         return self.config[item]
 
     def create_structure(self):
+        base_html = os.path.join(
+            self.config["searchpath"],
+            application_default_template_path(),
+            application_default_base_html()
+        )
+
+        default_template = os.path.join(
+            self.config["searchpath"],
+            application_default_template_path(),
+            application_default_template_file()
+        )
+
+        index_md = os.path.join(
+            os.path.join(
+                self.config["searchpath"],
+                "index.md"
+            )
+        )
+
+        default_template_path = os.path.join(
+            self.config["searchpath"],
+            application_default_template_path()
+        )
+
         create_directory_if_not_exists(self.config["outpath"])
         create_directory_if_not_exists(self.config["searchpath"])
-
-        create_directory_if_not_exists(
-            os.path.join(
-                self.config["searchpath"],
-                application_default_template_path()
-            )
-        )
-
-        touch_if_not_exists(
-            os.path.join(self.config["searchpath"],
-                         application_default_template_path(),
-                         application_default_base_html()
-                         )
-        )
-        touch_if_not_exists(
-            os.path.join(
-                self.config["searchpath"],
-                application_default_template_path(),
-                application_default_template_file()
-            )
-        )
-        touch_if_not_exists(
-            os.path.join(
-                os.path.join(
-                    self.config["searchpath"],
-                    "index.md"
-                )
-            )
-        )
+        create_directory_if_not_exists(default_template_path)
+        touch_if_not_exists(default_template)
+        touch_if_not_exists(index_md)
+        touch_if_not_exists(base_html)

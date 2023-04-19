@@ -38,6 +38,9 @@ def search_config_in_dirs() -> str | None:
     return None
 
 
-def touch_if_not_exists(path):
-    if not os.path.exists(path):
+def touch_if_not_exists(path) -> bool:
+    exists = os.path.exists(path)
+    if not exists:
         Path(path).touch()
+
+    return exists
