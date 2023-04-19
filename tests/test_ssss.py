@@ -20,11 +20,11 @@ def test_ssss_no_args():
 def test_ssss_no_args_after_init():
     output, returncode = run_ssss("--init", "-c", "test.yml")
     assert returncode == 0
-    assert "Looking at: _templates/__index.j2, using default context_file: _templates/default.j2" in output
+    assert "Baking /home/magnus/Repos/Python/staticjinja/ssss/site/source/index.md" in output
 
     output, returncode = run_ssss("-c", "test.yml")
     assert returncode == 0
-    assert "Looking at: _templates/__index.j2, using default context_file: _templates/default.j2" in output
+    assert "Baking /home/magnus/Repos/Python/staticjinja/ssss/site/source/index.md" in output
 
     unlink('test.yml')
     make_empty('glob_ext', True)
@@ -86,12 +86,12 @@ def test_ssss_init_file_structure():
     output, returncode = run_ssss("--init")
     assert returncode == 0
 
-    site_exists = os.path.exists('glob_ext')
-    source_exists = os.path.exists('glob_ext/source/index.md')
-    template_exists = os.path.exists('glob_ext/source/_templates/default.j2')
-    base_exists = os.path.exists('glob_ext/source/_templates/base.html')
-    data_exists = os.path.exists('glob_ext/build/index.html')
+    site_exists = os.path.exists('site')
+    source_exists = os.path.exists('site/source/index.md')
+    template_exists = os.path.exists('site/source/_templates/default.j2')
+    base_exists = os.path.exists('site/source/_templates/base.html')
+    data_exists = os.path.exists('site/build/index.html')
 
     unlink('ssss.yml')
-    make_empty('glob_ext', True)
+    make_empty('site', True)
     assert site_exists and source_exists and template_exists and base_exists and data_exists
