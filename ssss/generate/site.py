@@ -20,4 +20,4 @@ def bake(config=None, reload_on_change=False):
     else:
         print("Building...")
 
-    contexts = bake_context(config)
+    bake_context(config)
