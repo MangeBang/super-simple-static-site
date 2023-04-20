@@ -20,11 +20,11 @@ def test_ssss_no_args():
 def test_ssss_no_args_after_init():
     output, returncode = run_ssss("--init", "-c", "test.yml")
     assert returncode == 0
-    assert "Baking /home/magnus/Repos/Python/staticjinja/ssss/site/source/index.md" in output
+    assert "site/source/index.md" in output
 
     output, returncode = run_ssss("-c", "test.yml")
     assert returncode == 0
-    assert "Baking /home/magnus/Repos/Python/staticjinja/ssss/site/source/index.md" in output
+    assert "site/source/index.md" in output
 
     unlink('test.yml')
     make_empty('site', True)
